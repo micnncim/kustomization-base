@@ -297,6 +297,34 @@ add them to the included `metric-filters` directory in your fork of
 spinaker-config, and reference them in the spinnaker-monitoring-filters
 `secretGenerator` entry in the root kustomization.yml.
 
+#### (Optional) Deploy gate without SSL
+
+This kustomization's [gate Deployment](/core/gate/base/deployment.yml) uses HTTPS as a scheme for readiness probe.
+If you want to deploy gate without SSL, you can configure it with a patch like this:
+
+```yaml
+- op: replace
+  path: /spec/template/spec/containers/0/readinessProbe
+  value:
+    httpGet:
+      port: traffic-port
+      path: /health
+```
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- github.com/spinnaker/kustomization-base/core
+patchesJson6902:
+- path: patch-gate-deployment.yml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: gate
+```
+
 #### Deploy Spinnaker
 
 Now that all of the config files are in place, you can generate the YAML files

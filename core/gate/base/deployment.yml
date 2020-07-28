@@ -20,8 +20,6 @@ spec:
           protocol: TCP
         readinessProbe:
           httpGet:
-            # TODO(ezimanyi): we need some way of making this scheme configurable
-            # so the health check passes without SSL enabled.
             scheme: HTTPS
             port: traffic-port
             path: /health
